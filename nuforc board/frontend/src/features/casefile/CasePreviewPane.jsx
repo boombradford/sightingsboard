@@ -45,13 +45,13 @@ export default function CasePreviewPane({
           <button
             type="button"
             onClick={onBack}
-            className="rounded-full border border-slate-500/40 bg-slate-900/75 px-3 py-1 text-xs uppercase tracking-[0.12em] text-slate-200"
+            className="rounded-full border border-slate-500/40 bg-slate-900/75 px-3 py-1 text-xs uppercase tracking-[0.12em] text-slate-200 xl:hidden"
           >
             Back To Results
           </button>
         </div>
       ) : null}
-      <section className="glass-card h-full min-h-[420px] space-y-3 overflow-y-auto p-4">
+      <section className="glass-card min-h-[420px] max-h-[calc(100vh-8rem)] space-y-3 overflow-y-auto p-4 xl:max-h-[calc(100vh-13rem)]">
         <header className="grid gap-2 border-b border-slate-500/25 pb-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-cyan-100">

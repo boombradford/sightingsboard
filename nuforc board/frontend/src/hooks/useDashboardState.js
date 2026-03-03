@@ -172,7 +172,6 @@ export function useDashboardState() {
 
     async function loadMain() {
       setLoadingMain(true);
-      setError("");
       try {
         if (state.sampleSetId) {
           const sampleSetPayload = await fetchJSON(`/api/sample-sets/${state.sampleSetId}`);
@@ -189,12 +188,14 @@ export function useDashboardState() {
             slice_signals: topSignalsFromItems(filtered),
             updated_at: sampleSetPayload.updated_at || new Date().toISOString(),
           });
+          setError("");
           return;
         }
 
         if (state.mode === "compare") {
           setItems([]);
           setMeta((current) => ({ ...current, returned: 0 }));
+          setError("");
           return;
         }
 
@@ -216,10 +217,9 @@ export function useDashboardState() {
             : topSignalsFromItems(filtered),
           updated_at: payload?.meta?.updated_at || new Date().toISOString(),
         });
+        setError("");
       } catch (err) {
         if (!cancelled && seq === requestSeq.current) {
-          setItems([]);
-          setMeta((current) => ({ ...current, returned: 0 }));
           setError(`Could not load sightings: ${describeError(err)}`);
         }
       } finally {
@@ -270,8 +270,23 @@ export function useDashboardState() {
         setBriefVersions(Array.isArray(briefPayload?.items) ? briefPayload.items : []);
       } catch (err) {
         if (!cancelled) {
-          setSelectedCase(null);
-          setBriefVersions([]);
+          const fallback = Array.isArray(items)
+            ? items.find((item) => Number(item?.sighting_id) === Number(state.selectedCaseId))
+            : null;
+          if (fallback) {
+            setSelectedCase((current) => {
+              if (current && Number(current.sighting_id) === Number(state.selectedCaseId)) {
+                return current;
+              }
+              return {
+                ...fallback,
+                evidence: Array.isArray(fallback.evidence) ? fallback.evidence : [],
+                evidence_count: Number(fallback.evidence_count ?? 0),
+                enrichment_count: Number(fallback.enrichment_count ?? 0),
+                ai_briefs: Array.isArray(fallback.ai_briefs) ? fallback.ai_briefs : [],
+              };
+            });
+          }
           setError(`Could not load case file: ${describeError(err)}`);
         }
       } finally {

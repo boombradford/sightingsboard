@@ -14,9 +14,9 @@ export default {
         panel: "0 22px 48px rgba(2, 10, 16, 0.42)",
       },
       fontFamily: {
-        display: ["Bebas Neue", "sans-serif"],
-        body: ["Manrope", "sans-serif"],
-        mono: ["IBM Plex Mono", "monospace"],
+        display: ["Space Grotesk", "sans-serif"],
+        body: ["Space Grotesk", "Manrope", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
       },
     },
   },

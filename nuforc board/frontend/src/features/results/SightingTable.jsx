@@ -1,4 +1,4 @@
-import { m } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import QualityBadge from "../quality/QualityBadge";
 import { rowTransition } from "../../lib/iosMotion";
 
@@ -33,6 +33,8 @@ function columnTitle(column) {
 }
 
 export default function SightingTable({ groups, columns, selectedCaseId, onSelectCase, loading }) {
+  const shouldReduceMotion = useReducedMotion();
+
   if (loading) {
     return <p className="text-sm text-slate-300">Loading sightings...</p>;
   }
@@ -64,14 +66,11 @@ export default function SightingTable({ groups, columns, selectedCaseId, onSelec
               <tbody>
                 {group.items.map((item, index) => {
                   const active = selectedCaseId === item.sighting_id;
-                  return (
-                    <m.tr
-                      key={item.sighting_id}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={rowTransition(index)}
-                      className={`border-b border-slate-500/15 ${active ? "bg-cyan-500/8" : "hover:bg-slate-900/35"}`}
-                    >
+                  const rowClass = `border-b border-slate-500/15 ${active ? "bg-cyan-500/8" : "hover:bg-slate-900/35"}`;
+                  const animateRow = !shouldReduceMotion && group.items.length <= 40 && index < 18;
+
+                  const rowCells = (
+                    <>
                       {columns.map((column) => (
                         <td key={`${item.sighting_id}-${column}`} className="px-3 py-2 align-top text-slate-100">
                           {column === "quality" ? (
@@ -94,7 +93,27 @@ export default function SightingTable({ groups, columns, selectedCaseId, onSelec
                           Open case file
                         </button>
                       </td>
-                    </m.tr>
+                    </>
+                  );
+
+                  if (animateRow) {
+                    return (
+                      <m.tr
+                        key={item.sighting_id}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={rowTransition(index)}
+                        className={rowClass}
+                      >
+                        {rowCells}
+                      </m.tr>
+                    );
+                  }
+
+                  return (
+                    <tr key={item.sighting_id} className={rowClass}>
+                      {rowCells}
+                    </tr>
                   );
                 })}
               </tbody>
