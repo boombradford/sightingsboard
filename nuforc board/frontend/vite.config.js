@@ -1,6 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+const isVercelBuild = process.env.VERCEL === "1";
+
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -12,7 +14,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "../web",
+    outDir: isVercelBuild ? "dist" : "../web",
     emptyOutDir: true,
   },
 });

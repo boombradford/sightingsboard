@@ -83,16 +83,6 @@ export function buildFactRows(item, statsMap, narrativeText) {
   ].filter(([, value]) => value);
 }
 
-export function cardSpanClass(index) {
-  if (index % 7 === 0) {
-    return "md:col-span-2 2xl:col-span-12";
-  }
-  if (index % 3 === 0) {
-    return "2xl:col-span-4";
-  }
-  return "2xl:col-span-6";
-}
-
 export function formatMeta(meta) {
   const total = Number(meta?.total || 0);
   const returned = Number(meta?.returned || 0);

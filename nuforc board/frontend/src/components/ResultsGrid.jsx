@@ -7,7 +7,7 @@ export default function ResultsGrid({ items, loading, aiBriefs, onGenerateBrief 
   return (
     <div
       className={cx(
-        "grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-12 transition",
+        "grid grid-cols-1 gap-5 lg:grid-cols-2 transition",
         loading && "opacity-55 saturate-75"
       )}
     >
@@ -29,7 +29,7 @@ export default function ResultsGrid({ items, loading, aiBriefs, onGenerateBrief 
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="glass-card col-span-full rounded-2xl px-4 py-8 text-center text-sm text-slate-300"
+            className="glass-card rounded-2xl px-4 py-8 text-center text-sm text-slate-300 lg:col-span-2"
           >
             {loading ? "Loading sightings..." : "No sightings match this filter set."}
           </m.p>

@@ -57,7 +57,21 @@ export function formatReportNarrative(text) {
   const raw = String(text || "").trim();
   if (!raw) return "";
 
-  let formatted = raw.replace(/\s+/g, " ").trim();
+  let formatted = raw
+    .replace(/\r\n?/g, "\n")
+    .replace(/[ \t]+/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  formatted = formatted.replace(/Reporter\s*note:\s*/gi, "Reporter note: ");
+  formatted = formatted.replace(
+    /(Reporter note:\s*please read(?: this| the| the below| below)?(?: report| and the end)?)/i,
+    "$1\n\n"
+  );
+  formatted = formatted.replace(
+    /(Please read(?: this| the| the below| below)?\s+report)\s+(UNIDENTIFIED AERIAL PHENOMENA REPORT)/i,
+    "$1\n\n$2"
+  );
   formatted = formatted.replace(
     /(UNIDENTIFIED AERIAL PHENOMENA REPORT)\s+/i,
     "$1\n\n"
@@ -70,5 +84,6 @@ export function formatReportNarrative(text) {
   formatted = formatted.replace(headingsPattern, "\n\n");
 
   formatted = formatted.replace(/\s*•\s*/g, "\n• ");
+  formatted = formatted.replace(/\n{3,}/g, "\n\n");
   return formatted;
 }

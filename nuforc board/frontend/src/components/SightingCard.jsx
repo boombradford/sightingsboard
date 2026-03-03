@@ -11,7 +11,6 @@ import {
 import {
   buildFactRows,
   buildMapLink,
-  cardSpanClass,
   formatCoord,
   parseStatsMap,
 } from "../lib/sighting";
@@ -76,7 +75,7 @@ const SightingCard = memo(function SightingCard({ item, index, brief, onGenerate
       exit="exit"
       whileHover={{ y: -2 }}
       whileTap={{ scale: 0.993 }}
-      className={cx("glass-card col-span-1 grid gap-3 rounded-2xl p-4", cardSpanClass(index))}
+      className={cx("glass-card grid gap-4 rounded-2xl p-5")}
     >
       <header className="grid gap-1">
         <p className="text-[11px] text-slate-400">

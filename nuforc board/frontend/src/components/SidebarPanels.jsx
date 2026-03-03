@@ -32,7 +32,7 @@ export default function SidebarPanels({
       initial="hidden"
       animate="visible"
       transition={{ delay: 0.04 }}
-      className={cx("space-y-4", className)}
+      className={cx("space-y-5", className)}
     >
       <FilterPanel
         draftFilters={draftFilters}
