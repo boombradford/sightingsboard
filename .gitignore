@@ -1,0 +1,3 @@
+
+# Large local DB bundle
+nuforc board/frontend/api_support/*.sqlitebundle
