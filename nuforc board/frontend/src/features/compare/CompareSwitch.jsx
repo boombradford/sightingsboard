@@ -1,39 +1,48 @@
-import { m } from "framer-motion";
+import { m } from "motion/react";
+import { springs } from "../../lib/motion";
+
+const MODES = [
+  { key: "explore", label: "Explore" },
+  { key: "compare", label: "Compare" },
+];
 
 export default function CompareSwitch({ mode, includeBaseline, onModeChange, onBaselineChange }) {
   return (
-    <section className="glass-card flex flex-wrap items-center justify-between gap-3 p-3">
-      <div className="inline-flex rounded-full border border-slate-500/35 bg-slate-900/80 p-1">
-        {[
-          { key: "explore", label: "Explore" },
-          { key: "compare", label: "Compare" },
-        ].map((option) => {
-          const active = mode === option.key;
+    <div className="flex items-center gap-4">
+      <div className="relative inline-flex items-center gap-0.5 rounded-lg border border-white/[0.06] bg-white/[0.02] p-0.5">
+        {MODES.map((opt) => {
+          const active = mode === opt.key;
           return (
-            <m.button
-              key={option.key}
+            <button
+              key={opt.key}
               type="button"
-              whileTap={{ scale: 0.97 }}
-              onClick={() => onModeChange(option.key)}
-              className={`rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] ${
-                active ? "bg-cyan-500/20 text-cyan-100" : "text-slate-300"
+              onClick={() => onModeChange(opt.key)}
+              className={`relative z-10 rounded-md px-3 py-1.5 text-caption font-medium transition-colors ${
+                active ? "text-surface-deepest" : "text-slate-400 hover:text-slate-200"
               }`}
             >
-              {option.label}
-            </m.button>
+              {active && (
+                <m.div
+                  className="absolute inset-0 rounded-md bg-accent"
+                  layoutId="mode-pill"
+                  transition={springs.snappy}
+                />
+              )}
+              <span className="relative">{opt.label}</span>
+            </button>
           );
         })}
       </div>
 
-      <label className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-slate-300">
+      <label className="inline-flex items-center gap-2 text-caption text-slate-400">
         <input
           type="checkbox"
           checked={Boolean(includeBaseline)}
-          onChange={(event) => onBaselineChange(event.target.checked)}
-          className="h-4 w-4 rounded border-slate-500 bg-slate-900"
+          onChange={(e) => onBaselineChange(e.target.checked)}
+          className="h-3.5 w-3.5 rounded border-white/[0.15] bg-surface-card accent-accent"
         />
-        Include baseline
+        Baseline
       </label>
-    </section>
+    </div>
   );
 }

@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { m } from "motion/react";
+import { springs, stagger } from "../../lib/motion";
+import Badge from "../shared/Badge";
 import AddEvidenceModal from "./AddEvidenceModal";
 
-function stanceStyle(stance) {
-  if (stance === "supports") return "border-emerald-300/45 bg-emerald-500/10 text-emerald-100";
-  if (stance === "contradicts") return "border-rose-300/45 bg-rose-500/10 text-rose-100";
-  return "border-slate-400/45 bg-slate-500/10 text-slate-100";
+function stanceVariant(stance) {
+  if (stance === "supports") return "success";
+  if (stance === "contradicts") return "danger";
+  return "neutral";
 }
 
 export default function EvidencePanel({ caseItem, onAddEvidence }) {
@@ -12,51 +15,60 @@ export default function EvidencePanel({ caseItem, onAddEvidence }) {
   const evidence = Array.isArray(caseItem?.evidence) ? caseItem.evidence : [];
 
   return (
-    <section className="glass-card space-y-3 p-3">
+    <section className="space-y-3">
       <header className="flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-200">Evidence</h3>
-        <button
+        <h3 className="text-caption font-semibold text-slate-200">Evidence</h3>
+        <m.button
           type="button"
           onClick={() => setOpen(true)}
-          className="rounded-full border border-cyan-300/70 bg-cyan-500/15 px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-cyan-100"
+          whileTap={{ scale: 0.96, transition: springs.snappy }}
+          className="rounded-lg border border-accent/20 bg-accent-muted px-2.5 py-1 text-micro font-medium text-accent transition-colors hover:border-accent/40"
         >
           Add enrichment
-        </button>
+        </m.button>
       </header>
 
       {!evidence.length ? (
-        <div className="rounded-lg border border-slate-500/30 bg-slate-900/60 px-3 py-2 text-xs text-slate-300">
-          Evidence: None yet. Link a source with stance and match factors.
+        <div className="rounded-lg border border-white/[0.04] bg-surface-deepest/40 px-3 py-2.5 text-caption text-slate-500">
+          No evidence linked yet.
         </div>
       ) : (
-        <ul className="grid gap-2">
-          {evidence.map((item) => (
-            <li key={item.evidence_id} className="rounded-xl border border-slate-500/35 bg-slate-950/70 p-3">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-xs font-semibold text-slate-100">{item.source_title}</p>
-                <span className={`rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] ${stanceStyle(item.stance)}`}>
-                  {item.stance}
-                </span>
+        <ul className="space-y-1.5">
+          {evidence.map((item, i) => (
+            <m.li
+              key={item.evidence_id}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ ...springs.smooth, delay: stagger(i) }}
+              className="rounded-lg border border-white/[0.04] bg-surface-deepest/50 p-3"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <p className="text-caption font-medium text-slate-200">{item.source_title}</p>
+                <Badge variant={stanceVariant(item.stance)}>{item.stance}</Badge>
               </div>
-              <p className="mt-0.5 text-[10px] font-mono text-slate-400">{item.domain || "unknown-domain"}</p>
-              <div className="mt-1 flex flex-wrap gap-1 text-[10px] uppercase tracking-[0.12em] text-slate-300">
-                {item.match_time ? <span className="chip">time</span> : null}
-                {item.match_location ? <span className="chip">location</span> : null}
-                {item.match_visual ? <span className="chip">visual</span> : null}
+              <p className="mt-0.5 text-micro font-mono text-slate-500">{item.domain || "unknown"}</p>
+              <div className="mt-1.5 flex flex-wrap gap-1">
+                {item.match_time && <Badge variant="neutral">time</Badge>}
+                {item.match_location && <Badge variant="neutral">location</Badge>}
+                {item.match_visual && <Badge variant="neutral">visual</Badge>}
               </div>
-              <p className="mt-2 text-xs leading-relaxed text-slate-200">{item.notes}</p>
-              {item.excerpt ? <blockquote className="mt-2 border-l-2 border-slate-500/35 pl-2 text-xs text-slate-300">{item.excerpt}</blockquote> : null}
-              {item.source_url ? (
+              {item.notes && <p className="mt-2 text-caption text-slate-400">{item.notes}</p>}
+              {item.excerpt && (
+                <blockquote className="mt-2 border-l-2 border-white/[0.08] pl-2.5 text-caption text-slate-500 italic">
+                  {item.excerpt}
+                </blockquote>
+              )}
+              {item.source_url && (
                 <a
                   href={item.source_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-2 inline-flex text-xs text-cyan-200 underline-offset-2 hover:underline"
+                  className="mt-2 inline-block text-micro text-accent/80 hover:text-accent"
                 >
-                  Open source
+                  Open source &rarr;
                 </a>
-              ) : null}
-            </li>
+              )}
+            </m.li>
           ))}
         </ul>
       )}

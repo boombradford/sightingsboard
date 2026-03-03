@@ -1,5 +1,5 @@
-import { m } from "framer-motion";
-import { buttonMotion } from "../lib/animations";
+import { m } from "motion/react";
+import { buttonMotion } from "../lib/motion";
 
 export default function FilterPanel({
   draftFilters,

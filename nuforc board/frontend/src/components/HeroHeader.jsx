@@ -1,5 +1,5 @@
-import { m } from "framer-motion";
-import { buttonMotion, sectionVariants } from "../lib/animations";
+import { m } from "motion/react";
+import { buttonMotion, sectionVariants } from "../lib/motion";
 
 export default function HeroHeader({ menuOpen, onToggleMenu }) {
   return (

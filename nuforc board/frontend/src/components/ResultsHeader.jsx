@@ -1,5 +1,5 @@
-import { m } from "framer-motion";
-import { sectionVariants } from "../lib/animations";
+import { m } from "motion/react";
+import { sectionVariants } from "../lib/motion";
 import { formatMeta } from "../lib/sighting";
 
 export default function ResultsHeader({ meta }) {

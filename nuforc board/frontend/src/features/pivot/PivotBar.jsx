@@ -1,4 +1,4 @@
-import { m } from "framer-motion";
+import { m } from "motion/react";
 import PivotLaneDate from "./PivotLaneDate";
 import PivotLanePlace from "./PivotLanePlace";
 import PivotLaneShape from "./PivotLaneShape";

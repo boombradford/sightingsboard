@@ -1,29 +1,65 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  /* ── Surface palette ── */
+  --color-surface-deepest: #030711;
+  --color-surface-card: #0a1120;
+  --color-surface-elevated: #111827;
+  --color-surface-hover: #1a2332;
+
+  /* ── Legacy night tokens ── */
+  --color-night-950: #060d15;
+  --color-night-900: #0a1824;
+  --color-night-850: #102432;
+
+  /* ── Accent ── */
+  --color-accent: #5eead4;
+  --color-accent-muted: rgba(94, 234, 212, 0.14);
+  --color-accent-ring: rgba(94, 234, 212, 0.25);
+
+  /* ── Semantic ── */
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-danger: #fb7185;
+  --color-info: #60a5fa;
+
+  /* ── Shadows ── */
+  --shadow-panel: 0 22px 48px rgba(2, 10, 16, 0.42);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-glow: 0 0 24px rgba(94, 234, 212, 0.12);
+
+  /* ── Fonts ── */
+  --font-display: "Bebas Neue", "Space Grotesk", sans-serif;
+  --font-body: "Manrope", "Space Grotesk", sans-serif;
+  --font-mono: "IBM Plex Mono", "JetBrains Mono", monospace;
+}
 
 :root {
   color-scheme: dark;
-  --midnight-bg: #020617;
-  --glass-bg: rgba(15, 23, 42, 0.62);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --accent: #22d3ee;
-  --accent-deep: #0ea5e9;
-  --text-primary: #f8fafc;
+  --midnight-bg: #030711;
+  --glass-bg: rgba(10, 17, 32, 0.80);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --accent: #5eead4;
+  --accent-deep: #2dd4bf;
+  --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: "Space Grotesk", "Manrope", sans-serif;
+  font-family: "Manrope", "Space Grotesk", sans-serif;
   color: var(--text-primary);
   background-color: var(--midnight-bg);
   background:
-    radial-gradient(circle at 18% 24%, rgba(14, 165, 233, 0.16) 0%, transparent 42%),
-    radial-gradient(circle at 84% 74%, rgba(99, 102, 241, 0.11) 0%, transparent 40%),
-    linear-gradient(160deg, #020617 0%, #081224 52%, #102031 100%);
+    radial-gradient(ellipse at 18% 24%, rgba(94, 234, 212, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 82% 76%, rgba(99, 102, 241, 0.04) 0%, transparent 45%),
+    linear-gradient(168deg, #030711 0%, #071019 50%, #0a1120 100%);
+  background-attachment: fixed;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
@@ -36,34 +72,82 @@ body {
   box-sizing: border-box;
 }
 
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* ── Text scale ── */
+.text-hero { font-size: 2rem; line-height: 1.15; }
+.text-heading { font-size: 1.125rem; line-height: 1.35; }
+.text-body { font-size: 0.8125rem; line-height: 1.55; }
+.text-caption { font-size: 0.6875rem; line-height: 1.5; }
+.text-micro { font-size: 0.625rem; line-height: 1.4; }
+
 @layer components {
+  /* ── Layout shell ── */
   .vitrine-shell {
     @apply relative z-10 flex min-h-screen;
   }
 
   .vitrine-rail {
-    @apply sticky top-0 h-screen w-20 flex-col items-center gap-8 border-r border-white/10 bg-slate-950/70 px-0 py-7 backdrop-blur-xl;
+    @apply sticky top-0 h-screen w-20 flex-col items-center gap-8 border-r border-white/[0.06] bg-surface-deepest/90 px-0 py-7 backdrop-blur-xl;
   }
 
   .vitrine-logo-box {
-    @apply h-10 w-10 rotate-45 rounded-xl bg-gradient-to-br from-cyan-300 to-sky-500 shadow-[0_0_22px_rgba(34,211,238,0.45)];
+    @apply h-10 w-10 rotate-45 rounded-xl bg-gradient-to-br from-teal-300 to-cyan-500 shadow-[0_0_20px_rgba(94,234,212,0.35)];
   }
 
   .vitrine-rail-item {
-    @apply flex h-11 w-11 items-center justify-center rounded-xl border border-transparent text-slate-400 transition duration-300 ease-out hover:-translate-y-0.5 hover:border-white/10 hover:bg-white/5 hover:text-cyan-200;
+    @apply flex h-11 w-11 items-center justify-center rounded-xl border border-transparent text-slate-400 transition duration-200 ease-out hover:-translate-y-0.5 hover:border-white/[0.08] hover:bg-white/[0.04] hover:text-accent;
   }
 
   .vitrine-rail-item.is-active {
-    @apply border-white/15 bg-white/10 text-cyan-200;
+    @apply border-white/[0.10] bg-white/[0.06] text-accent;
   }
 
   .vitrine-main-title {
-    @apply bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent;
     letter-spacing: -0.02em;
   }
 
+  /* ── Surface cards ── */
+  .surface-card {
+    @apply rounded-xl border border-white/[0.06] bg-surface-card/80 shadow-card backdrop-blur-xl;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-card), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  }
+
+  .surface-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+    pointer-events: none;
+  }
+
+  .surface-elevated {
+    @apply rounded-xl border border-white/[0.08] bg-surface-elevated/80 shadow-card backdrop-blur-xl;
+  }
+
+  /* ── Legacy glass-card (backwards compat) ── */
   .glass-card {
-    @apply rounded-3xl border border-white/10 bg-slate-900/60 shadow-panel backdrop-blur-xl;
+    @apply rounded-xl border border-white/[0.06] bg-surface-card/80 shadow-card backdrop-blur-xl;
     position: relative;
     overflow: hidden;
   }
@@ -75,75 +159,101 @@ body {
     right: 0;
     top: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
     pointer-events: none;
   }
 
   .glass-card {
-    transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 300ms ease;
+    transition: transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 200ms ease;
   }
 
   .glass-card:hover {
     box-shadow:
-      0 24px 50px rgba(1, 7, 16, 0.5),
-      0 0 0 1px rgba(34, 211, 238, 0.18);
+      0 12px 36px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(94, 234, 212, 0.10);
   }
 
+  /* ── Chips and badges ── */
   .chip {
-    @apply rounded-full border border-white/10 bg-slate-900/80 px-2.5 py-1 text-xs font-medium tracking-wide text-slate-100;
+    @apply rounded-full border border-white/[0.08] bg-surface-card/80 px-2.5 py-1 text-xs font-medium text-slate-200;
+    letter-spacing: 0.02em;
   }
 
+  /* ── Panel title ── */
   .panel-title {
-    @apply text-[0.7rem] font-mono uppercase tracking-[0.2em] text-cyan-200/90;
+    @apply font-mono uppercase;
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    color: rgba(94, 234, 212, 0.8);
   }
 
+  /* ── Buttons ── */
   .btn-crystal {
-    @apply inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs uppercase tracking-[0.14em] text-slate-100 transition duration-200;
+    @apply inline-flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-xs text-slate-200 transition duration-150;
+    letter-spacing: 0.04em;
   }
 
   .btn-crystal:hover {
-    @apply border-cyan-200/60 bg-white/10 text-cyan-100 shadow-[0_0_15px_rgba(34,211,238,0.2)];
+    @apply border-accent/40 bg-white/[0.07] text-accent shadow-[0_0_12px_rgba(94,234,212,0.12)];
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-lg bg-accent/90 px-4 py-2 text-sm font-semibold text-surface-deepest transition duration-150;
+  }
+
+  .btn-primary:hover {
+    @apply bg-accent shadow-glow;
   }
 }
 
+/* ── Ambient shards ── */
 .vitrine-shard {
   position: fixed;
   z-index: 0;
   pointer-events: none;
   border-radius: 9999px;
-  opacity: 0.48;
-  filter: blur(84px);
-  animation: vitrine-pulse 13s ease-in-out infinite alternate;
+  opacity: 0.28;
+  filter: blur(100px);
+  animation: vitrine-pulse 16s ease-in-out infinite alternate;
 }
 
 .vitrine-shard-a {
-  width: 360px;
-  height: 360px;
-  left: -110px;
-  top: -120px;
-  background: #0ea5e9;
+  width: 400px;
+  height: 400px;
+  left: -140px;
+  top: -140px;
+  background: #2dd4bf;
 }
 
 .vitrine-shard-b {
-  width: 460px;
-  height: 460px;
-  right: -150px;
-  bottom: -180px;
+  width: 500px;
+  height: 500px;
+  right: -180px;
+  bottom: -200px;
   background: #4f46e5;
 }
 
 @keyframes vitrine-pulse {
-  0% {
-    transform: scale(1) translate3d(0, 0, 0);
-  }
-  100% {
-    transform: scale(1.14) translate3d(4%, 5%, 0);
-  }
+  0% { transform: scale(1) translate3d(0, 0, 0); }
+  100% { transform: scale(1.08) translate3d(3%, 4%, 0); }
+}
+
+/* ── Shimmer for loading skeletons ── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
 }
 
 @media (max-width: 1023px) {
   .vitrine-shard {
-    opacity: 0.32;
-    filter: blur(62px);
+    opacity: 0.18;
+    filter: blur(80px);
   }
 }

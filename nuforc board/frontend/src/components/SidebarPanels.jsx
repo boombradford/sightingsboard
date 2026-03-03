@@ -1,6 +1,6 @@
-import { m } from "framer-motion";
+import { m } from "motion/react";
 import { cx } from "../lib/format";
-import { sectionVariants } from "../lib/animations";
+import { sectionVariants } from "../lib/motion";
 import FilterPanel from "./FilterPanel";
 import DatasetPulsePanel from "./DatasetPulsePanel";
 import ActiveSlicePanel from "./ActiveSlicePanel";

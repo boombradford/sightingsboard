@@ -1,6 +1,8 @@
-import { m, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "motion/react";
 import QualityBadge from "../quality/QualityBadge";
-import { rowTransition } from "../../lib/iosMotion";
+import LoadingSkeleton from "../shared/LoadingSkeleton";
+import EmptyState from "../shared/EmptyState";
+import { rowTransition, springs } from "../../lib/motion";
 
 function shortSignals(signals) {
   if (!Array.isArray(signals) || !signals.length) return "-";
@@ -18,80 +20,89 @@ function renderCell(item, column) {
   return null;
 }
 
-function columnTitle(column) {
-  const map = {
-    date_time: "Date",
-    location: "Location",
-    shape: "Shape",
-    duration: "Duration",
-    observers: "Observers",
-    quality: "Quality",
-    evidence: "Evidence",
-    signals: "Signals",
-  };
-  return map[column] || column;
-}
+const COL_TITLES = {
+  date_time: "Date",
+  location: "Location",
+  shape: "Shape",
+  duration: "Duration",
+  observers: "Obs.",
+  quality: "Quality",
+  evidence: "Evid.",
+  signals: "Signals",
+};
 
 export default function SightingTable({ groups, columns, selectedCaseId, onSelectCase, loading }) {
   const shouldReduceMotion = useReducedMotion();
 
-  if (loading) {
-    return <p className="text-sm text-slate-300">Loading sightings...</p>;
-  }
+  if (loading) return <LoadingSkeleton rows={8} columns={columns.length} />;
+
   if (!Array.isArray(groups) || !groups.length) {
-    return <p className="text-sm text-slate-400">No sightings in this slice.</p>;
+    return <EmptyState title="No sightings" description="Adjust your filters to see results." />;
   }
 
   return (
     <div className="space-y-3">
       {groups.map((group) => (
-        <section key={group.key} className="glass-card overflow-hidden">
-          <header className="border-b border-slate-500/25 bg-slate-900/60 px-3 py-2">
-            <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-200">
-              {group.key} <span className="text-slate-400">({group.items.length})</span>
+        <section key={group.key} className="surface-card overflow-hidden">
+          <header className="flex items-center justify-between border-b border-white/[0.06] bg-surface-elevated/50 px-4 py-2.5">
+            <h3 className="text-caption font-semibold text-slate-200">
+              {group.key}
             </h3>
+            <span className="text-micro text-slate-500">{group.items.length}</span>
           </header>
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[780px] border-collapse text-left text-xs">
+            <table className="w-full min-w-[700px] border-collapse text-left">
               <thead>
-                <tr className="border-b border-slate-500/20 bg-slate-900/40 text-slate-400">
-                  {columns.map((column) => (
-                    <th key={`${group.key}-${column}`} className="px-3 py-2 font-medium uppercase tracking-[0.12em]">
-                      {columnTitle(column)}
+                <tr className="border-b border-white/[0.04]">
+                  {columns.map((col) => (
+                    <th
+                      key={`${group.key}-${col}`}
+                      className="px-4 py-2 text-micro font-medium text-slate-500"
+                      style={{ letterSpacing: "0.04em" }}
+                    >
+                      {COL_TITLES[col] || col}
                     </th>
                   ))}
-                  <th className="px-3 py-2 font-medium uppercase tracking-[0.12em]">Action</th>
+                  <th className="px-4 py-2 text-micro font-medium text-slate-500" style={{ letterSpacing: "0.04em" }}>
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {group.items.map((item, index) => {
                   const active = selectedCaseId === item.sighting_id;
-                  const rowClass = `border-b border-slate-500/15 ${active ? "bg-cyan-500/8" : "hover:bg-slate-900/35"}`;
                   const animateRow = !shouldReduceMotion && group.items.length <= 40 && index < 18;
 
-                  const rowCells = (
+                  const rowCls = `border-b border-white/[0.03] transition-colors cursor-pointer ${
+                    active
+                      ? "bg-accent-muted"
+                      : "hover:bg-white/[0.02]"
+                  }`;
+
+                  const cells = (
                     <>
-                      {columns.map((column) => (
-                        <td key={`${item.sighting_id}-${column}`} className="px-3 py-2 align-top text-slate-100">
-                          {column === "quality" ? (
+                      {columns.map((col) => (
+                        <td key={`${item.sighting_id}-${col}`} className="px-4 py-2.5 text-caption text-slate-300" onClick={() => onSelectCase(item.sighting_id)}>
+                          {col === "quality" ? (
                             <QualityBadge label={item.quality_label} score={item.quality_score} />
                           ) : (
-                            renderCell(item, column)
+                            renderCell(item, col)
                           )}
                         </td>
                       ))}
-                      <td className="px-3 py-2 align-top">
-                        <button
+                      <td className="px-4 py-2.5">
+                        <m.button
                           type="button"
                           onClick={() => onSelectCase(item.sighting_id)}
-                          className={`rounded-full border px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] ${
+                          whileTap={{ scale: 0.96, transition: springs.snappy }}
+                          className={`rounded-lg border px-2.5 py-1 text-micro font-medium transition-colors ${
                             active
-                              ? "border-cyan-300/70 bg-cyan-500/15 text-cyan-100"
-                              : "border-slate-500/40 bg-slate-900/70 text-slate-200"
+                              ? "border-accent/30 bg-accent-muted text-accent"
+                              : "border-white/[0.08] text-slate-400 hover:border-white/[0.12] hover:text-slate-200"
                           }`}
                         >
-                          Open case file
-                        </button>
+                          Open
+                        </m.button>
                       </td>
                     </>
                   );
@@ -100,19 +111,19 @@ export default function SightingTable({ groups, columns, selectedCaseId, onSelec
                     return (
                       <m.tr
                         key={item.sighting_id}
-                        initial={{ opacity: 0, y: 8 }}
+                        initial={{ opacity: 0, y: 6 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={rowTransition(index)}
-                        className={rowClass}
+                        className={rowCls}
                       >
-                        {rowCells}
+                        {cells}
                       </m.tr>
                     );
                   }
 
                   return (
-                    <tr key={item.sighting_id} className={rowClass}>
-                      {rowCells}
+                    <tr key={item.sighting_id} className={rowCls}>
+                      {cells}
                     </tr>
                   );
                 })}

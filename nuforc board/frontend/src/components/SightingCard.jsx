@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { m } from "framer-motion";
-import { buttonMotion, cardVariants } from "../lib/animations";
+import { m } from "motion/react";
+import { buttonMotion, cardVariants } from "../lib/motion";
 import { cleanValue, describeError, safeText, cx } from "../lib/format";
 import {
   extractReadRequest,

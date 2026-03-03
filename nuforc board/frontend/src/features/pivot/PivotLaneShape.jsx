@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { m } from "framer-motion";
+import { m } from "motion/react";
 import MiniHistogram from "./MiniHistogram";
 import PinToggle from "./PinToggle";
 

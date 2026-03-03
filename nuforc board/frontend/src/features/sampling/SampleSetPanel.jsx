@@ -1,10 +1,10 @@
 export default function SampleSetPanel({ sampleSets, activeSetId, onOpenSet }) {
   if (!Array.isArray(sampleSets) || !sampleSets.length) {
-    return <p className="text-xs text-slate-400">No saved sample sets yet.</p>;
+    return <p className="text-caption text-slate-500">No saved sample sets yet.</p>;
   }
 
   return (
-    <ul className="grid gap-2">
+    <ul className="space-y-1.5">
       {sampleSets.map((set) => {
         const active = set.set_id === activeSetId;
         return (
@@ -12,14 +12,14 @@ export default function SampleSetPanel({ sampleSets, activeSetId, onOpenSet }) {
             <button
               type="button"
               onClick={() => onOpenSet(set.set_id)}
-              className={`w-full rounded-lg border px-3 py-2 text-left text-xs ${
+              className={`w-full rounded-lg border px-3 py-2 text-left transition-colors ${
                 active
-                  ? "border-cyan-300/70 bg-cyan-500/15 text-cyan-100"
-                  : "border-slate-500/30 bg-slate-900/65 text-slate-200"
+                  ? "border-accent/30 bg-accent-muted text-accent"
+                  : "border-white/[0.06] bg-white/[0.02] text-slate-300 hover:border-white/[0.10] hover:text-slate-100"
               }`}
             >
-              <p className="font-semibold uppercase tracking-[0.12em]">{set.name}</p>
-              <p className="mt-0.5 font-mono text-[10px] text-slate-400">{set.set_id} | {set.item_count} cases</p>
+              <p className="text-caption font-medium">{set.name}</p>
+              <p className="mt-0.5 text-micro font-mono text-slate-500">{set.set_id} &middot; {set.item_count} cases</p>
             </button>
           </li>
         );

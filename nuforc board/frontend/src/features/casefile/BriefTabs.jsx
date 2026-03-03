@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
+import { m } from "motion/react";
+import { springs, stagger } from "../../lib/motion";
 
 const TABS = ["summary", "signals", "citations"];
 
 function cleanSignalLabel(value) {
   return String(value || "")
     .replaceAll("_", " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 export default function BriefTabs({ caseItem, versions, onSignalClick }) {
@@ -14,17 +16,18 @@ export default function BriefTabs({ caseItem, versions, onSignalClick }) {
   const brief = latest?.brief || caseItem?.latest_brief?.brief || null;
 
   return (
-    <section className="glass-card space-y-3 p-3">
+    <section className="space-y-3">
       <header className="flex items-center justify-between gap-2">
-        <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-200">AI case brief</h3>
-        {latest ? (
-          <p className="text-[10px] font-mono text-slate-400">
-            v{latest.version_num} | {latest.generated_at}
-          </p>
-        ) : null}
+        <h3 className="text-caption font-semibold text-slate-200">AI Brief</h3>
+        {latest && (
+          <span className="text-micro font-mono text-slate-500">
+            v{latest.version_num} &middot; {latest.generated_at}
+          </span>
+        )}
       </header>
 
-      <div className="inline-flex rounded-full border border-slate-500/35 bg-slate-900/75 p-1">
+      {/* Tabs */}
+      <div className="relative inline-flex items-center gap-0.5 rounded-lg border border-white/[0.06] bg-white/[0.02] p-0.5">
         {TABS.map((key) => {
           const active = tab === key;
           return (
@@ -32,96 +35,116 @@ export default function BriefTabs({ caseItem, versions, onSignalClick }) {
               key={key}
               type="button"
               onClick={() => setTab(key)}
-              className={`rounded-full px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] ${
-                active ? "bg-cyan-500/20 text-cyan-100" : "text-slate-300"
+              className={`relative z-10 rounded-md px-2.5 py-1 text-micro font-medium transition-colors capitalize ${
+                active ? "text-surface-deepest" : "text-slate-400 hover:text-slate-200"
               }`}
             >
-              {key}
+              {active && (
+                <m.div
+                  className="absolute inset-0 rounded-md bg-accent"
+                  layoutId="brief-tab"
+                  transition={springs.snappy}
+                />
+              )}
+              <span className="relative">{key}</span>
             </button>
           );
         })}
       </div>
 
-      {!brief ? (
-        <p className="text-xs text-slate-400">No AI brief generated for this case yet.</p>
-      ) : null}
+      {!brief && (
+        <p className="text-caption text-slate-500">No AI brief generated yet.</p>
+      )}
 
-      {brief && tab === "summary" ? (
-        <div className="space-y-2 text-xs text-slate-200">
-          <p className="text-[10px] uppercase tracking-[0.12em] text-slate-400">Synopsis</p>
-          <ul className="grid gap-1.5">
-            {(brief.summary?.synopsis_bullets || []).slice(0, 7).map((line, index) => (
-              <li key={`synopsis-${index}`} className="rounded-lg border border-slate-500/30 bg-slate-900/60 px-2.5 py-1.5">
-                {line}
-              </li>
-            ))}
-          </ul>
+      {brief && tab === "summary" && (
+        <div className="space-y-3">
+          {[
+            { label: "Synopsis", items: brief.summary?.synopsis_bullets },
+            { label: "Witness claims", items: brief.summary?.witness_claims },
+          ].map(({ label, items: bulletItems }) =>
+            bulletItems?.length ? (
+              <div key={label}>
+                <p className="mb-1.5 text-micro font-medium text-slate-500">{label}</p>
+                <ul className="space-y-1">
+                  {bulletItems.slice(0, 7).map((line, i) => (
+                    <m.li
+                      key={i}
+                      initial={{ opacity: 0, x: -6 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ ...springs.smooth, delay: stagger(i) }}
+                      className="rounded-lg border border-white/[0.04] bg-surface-deepest/50 px-3 py-2 text-caption text-slate-300"
+                    >
+                      {line}
+                    </m.li>
+                  ))}
+                </ul>
+              </div>
+            ) : null
+          )}
 
-          <p className="text-[10px] uppercase tracking-[0.12em] text-slate-400">Witness claims</p>
-          <ul className="grid gap-1.5">
-            {(brief.summary?.witness_claims || []).map((line, index) => (
-              <li key={`claim-${index}`} className="rounded-lg border border-slate-500/30 bg-slate-900/60 px-2.5 py-1.5">
-                {line}
-              </li>
-            ))}
-          </ul>
-
-          <p className="text-[10px] uppercase tracking-[0.12em] text-slate-400">Conventional hypotheses</p>
-          <ul className="grid gap-1.5">
-            {(brief.summary?.conventional_hypotheses || []).map((hypothesis, index) => (
-              <li key={`hypothesis-${index}`} className="rounded-lg border border-slate-500/30 bg-slate-900/60 px-2.5 py-1.5">
-                <p className="font-semibold text-slate-100">{hypothesis.label}</p>
-                <p>{hypothesis.why}</p>
-              </li>
-            ))}
-          </ul>
+          {brief.summary?.conventional_hypotheses?.length ? (
+            <div>
+              <p className="mb-1.5 text-micro font-medium text-slate-500">Hypotheses</p>
+              <ul className="space-y-1">
+                {brief.summary.conventional_hypotheses.map((h, i) => (
+                  <li key={i} className="rounded-lg border border-white/[0.04] bg-surface-deepest/50 px-3 py-2">
+                    <p className="text-caption font-medium text-slate-200">{h.label}</p>
+                    <p className="text-micro text-slate-400 mt-0.5">{h.why}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </div>
-      ) : null}
+      )}
 
-      {brief && tab === "signals" ? (
-        <div className="grid gap-2 text-xs text-slate-200">
-          {(brief.signals || []).map((signal, index) => (
-            <button
-              key={`${signal.key || signal.label || index}`}
+      {brief && tab === "signals" && (
+        <div className="space-y-1">
+          {(brief.signals || []).map((signal, i) => (
+            <m.button
+              key={signal.key || signal.label || i}
               type="button"
               onClick={() => onSignalClick(signal.key)}
-              className="rounded-lg border border-slate-500/30 bg-slate-900/60 px-2.5 py-1.5 text-left hover:border-cyan-300/50"
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ ...springs.smooth, delay: stagger(i) }}
+              className="w-full rounded-lg border border-white/[0.04] bg-surface-deepest/50 px-3 py-2 text-left transition-colors hover:border-accent/20"
             >
-              <p className="font-semibold text-cyan-100">{signal.label || cleanSignalLabel(signal.key)}</p>
-              <p>{signal.why}</p>
-            </button>
+              <p className="text-caption font-medium text-accent">{signal.label || cleanSignalLabel(signal.key)}</p>
+              <p className="text-micro text-slate-400 mt-0.5">{signal.why}</p>
+            </m.button>
           ))}
         </div>
-      ) : null}
+      )}
 
-      {brief && tab === "citations" ? (
-        <ul className="grid gap-2 text-xs text-slate-200">
-          {(brief.citations || []).map((citation, index) => (
-            <li key={`citation-${index}`} className="rounded-lg border border-slate-500/30 bg-slate-900/60 p-2">
-              <p className="font-semibold text-slate-100">{citation.claim}</p>
-              <p className="mt-1 text-[11px] text-slate-300">
-                Fields: {(citation.field_keys || []).join(", ") || "n/a"}
+      {brief && tab === "citations" && (
+        <ul className="space-y-1">
+          {(brief.citations || []).map((cit, i) => (
+            <li key={i} className="rounded-lg border border-white/[0.04] bg-surface-deepest/50 p-3">
+              <p className="text-caption font-medium text-slate-200">{cit.claim}</p>
+              <p className="mt-1 text-micro text-slate-500">
+                Fields: {(cit.field_keys || []).join(", ") || "n/a"}
               </p>
-              <p className="mt-1">{citation.narrative_excerpt || "No narrative excerpt"}</p>
-              {Array.isArray(citation.source_urls) && citation.source_urls.length ? (
-                <div className="mt-1 flex flex-wrap gap-1">
-                  {citation.source_urls.map((url) => (
+              <p className="mt-1 text-micro text-slate-400">{cit.narrative_excerpt || "No excerpt"}</p>
+              {Array.isArray(cit.source_urls) && cit.source_urls.length > 0 && (
+                <div className="mt-1.5 flex flex-wrap gap-1">
+                  {cit.source_urls.map((url) => (
                     <a
                       key={url}
                       href={url}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-[11px] text-cyan-200 underline-offset-2 hover:underline"
+                      className="text-micro text-accent/80 hover:text-accent underline-offset-2 hover:underline"
                     >
                       {url}
                     </a>
                   ))}
                 </div>
-              ) : null}
+              )}
             </li>
           ))}
         </ul>
-      ) : null}
+      )}
     </section>
   );
 }

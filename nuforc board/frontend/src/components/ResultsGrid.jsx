@@ -1,5 +1,5 @@
-import { AnimatePresence, m } from "framer-motion";
-import { cardVariants } from "../lib/animations";
+import { AnimatePresence, m } from "motion/react";
+import { cardVariants } from "../lib/motion";
 import { cx } from "../lib/format";
 import SightingCard from "./SightingCard";
 
