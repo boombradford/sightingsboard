@@ -103,7 +103,7 @@ export default function App() {
   };
 
   const breadcrumb = [
-    "Sky Ledger Atlas",
+    "Sky Ledger",
     state.mode === "compare" ? "Compare" : state.mode === "pipeline" ? "Pipeline" : state.mode === "discover" ? "Discover" : "Explore",
     ...(state.pivot.shape ? [`Shape: ${state.pivot.shape}`] : []),
     ...(state.pivot.state ? [`State: ${state.pivot.state}`] : []),

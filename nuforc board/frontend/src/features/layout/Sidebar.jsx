@@ -46,55 +46,18 @@ export default function Sidebar({ collapsed, mode, pulse, onModeChange, onSampli
       <div className={`flex items-center gap-3 border-b border-zinc-800 px-4 py-3 ${collapsed ? "justify-center" : ""}`}>
         <div className="shrink-0">
           <svg width="34" height="34" viewBox="0 0 120 120" fill="none">
-            {/* Outer ring */}
-            <circle cx="60" cy="60" r="56" stroke="#d4c5a0" strokeWidth="1.2" opacity="0.8"/>
-            <circle cx="60" cy="60" r="54" stroke="#d4c5a0" strokeWidth="0.3" opacity="0.2"/>
-            {/* Globe grid — latitude */}
-            <ellipse cx="60" cy="60" rx="54" ry="14" stroke="#d4c5a0" strokeWidth="0.5" opacity="0.15"/>
-            <ellipse cx="60" cy="60" rx="54" ry="30" stroke="#d4c5a0" strokeWidth="0.5" opacity="0.2"/>
-            <ellipse cx="60" cy="60" rx="54" ry="44" stroke="#d4c5a0" strokeWidth="0.5" opacity="0.2"/>
-            {/* Globe grid — longitude */}
-            <ellipse cx="60" cy="60" rx="14" ry="54" stroke="#d4c5a0" strokeWidth="0.5" opacity="0.15"/>
-            <ellipse cx="60" cy="60" rx="30" ry="54" stroke="#d4c5a0" strokeWidth="0.5" opacity="0.2"/>
-            <ellipse cx="60" cy="60" rx="44" ry="54" stroke="#d4c5a0" strokeWidth="0.5" opacity="0.2"/>
-            {/* Equator & prime meridian */}
-            <line x1="6" y1="60" x2="114" y2="60" stroke="#d4c5a0" strokeWidth="0.6" opacity="0.25"/>
-            <line x1="60" y1="6" x2="60" y2="114" stroke="#d4c5a0" strokeWidth="0.6" opacity="0.25"/>
-            {/* Saucer silhouette */}
-            <path d="M28 55 Q38 42, 60 40 Q82 42, 92 55 Q82 58, 60 59 Q38 58, 28 55Z" fill="#d4c5a0" opacity="0.9"/>
+            {/* Saucer body — tilted disc */}
+            <ellipse cx="60" cy="58" rx="38" ry="10" stroke="#e0e0e0" strokeWidth="1.8" fill="none" transform="rotate(-8 60 58)" />
             {/* Dome */}
-            <path d="M45 44 Q52 33, 60 32 Q68 33, 75 44 Q68 42, 60 41.5 Q52 42, 45 44Z" fill="#d4c5a0" opacity="0.7"/>
-            {/* Underside detail */}
-            <path d="M38 56 Q49 60, 60 60.5 Q71 60, 82 56 Q71 58, 60 58.5 Q49 58, 38 56Z" fill="#0a0e1a" opacity="0.3"/>
-            {/* Tractor beam */}
-            <path d="M50 59 L44 85 L76 85 L70 59Z" fill="#d4c5a0" opacity="0.04"/>
-            {/* Star markers */}
-            <circle cx="22" cy="28" r="1.2" fill="#d4c5a0" opacity="0.5"/>
-            <circle cx="95" cy="22" r="1" fill="#d4c5a0" opacity="0.4"/>
-            <circle cx="88" cy="82" r="1.2" fill="#d4c5a0" opacity="0.5"/>
-            <circle cx="30" cy="90" r="0.8" fill="#d4c5a0" opacity="0.3"/>
-            <circle cx="78" cy="30" r="0.6" fill="#d4c5a0" opacity="0.3"/>
-            {/* Compass ticks */}
-            <line x1="60" y1="2" x2="60" y2="7" stroke="#d4c5a0" strokeWidth="0.8" opacity="0.4"/>
-            <line x1="60" y1="113" x2="60" y2="118" stroke="#d4c5a0" strokeWidth="0.8" opacity="0.4"/>
-            <line x1="2" y1="60" x2="7" y2="60" stroke="#d4c5a0" strokeWidth="0.8" opacity="0.4"/>
-            <line x1="113" y1="60" x2="118" y2="60" stroke="#d4c5a0" strokeWidth="0.8" opacity="0.4"/>
-            {/* Diagonal ticks */}
-            <line x1="17.5" y1="17.5" x2="21" y2="21" stroke="#d4c5a0" strokeWidth="0.5" opacity="0.2"/>
-            <line x1="99" y1="99" x2="102.5" y2="102.5" stroke="#d4c5a0" strokeWidth="0.5" opacity="0.2"/>
-            <line x1="99" y1="21" x2="102.5" y2="17.5" stroke="#d4c5a0" strokeWidth="0.5" opacity="0.2"/>
-            <line x1="17.5" y1="102.5" x2="21" y2="99" stroke="#d4c5a0" strokeWidth="0.5" opacity="0.2"/>
+            <path d="M44 52 Q52 38, 60 36 Q68 38, 76 52" stroke="#e0e0e0" strokeWidth="1.8" fill="none" strokeLinecap="round" transform="rotate(-8 60 58)" />
+            {/* Orbital ring — larger, tilted opposite */}
+            <ellipse cx="60" cy="58" rx="52" ry="16" stroke="#e0e0e0" strokeWidth="1.2" fill="none" transform="rotate(15 60 58)" />
           </svg>
         </div>
         {!collapsed && (
-          <div className="flex flex-col">
-            <span className="text-[15px] font-bold tracking-[0.18em] uppercase" style={{ color: "#d4c5a0", fontFamily: "'Space Grotesk', 'Inter', sans-serif" }}>
-              Sky Ledger
-            </span>
-            <span className="text-[9px] font-bold tracking-[0.25em] uppercase" style={{ color: "#8a7d5a", fontFamily: "'Space Grotesk', 'Inter', sans-serif" }}>
-              Atlas
-            </span>
-          </div>
+          <span className="text-[15px] font-semibold tracking-[0.22em] uppercase text-white" style={{ fontFamily: "'Space Grotesk', 'Inter', sans-serif" }}>
+            Sky Ledger
+          </span>
         )}
       </div>
 

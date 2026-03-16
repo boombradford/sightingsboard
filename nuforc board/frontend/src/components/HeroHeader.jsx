@@ -11,8 +11,8 @@ export default function HeroHeader({ menuOpen, onToggleMenu }) {
     >
       <div className="mx-auto max-w-5xl space-y-6 text-center">
         <div className="space-y-3">
-          <p className="panel-title">NUFORC Intelligence Board</p>
-          <h1 className="font-display text-5xl leading-[0.9] text-slate-50 sm:text-6xl lg:text-7xl">Sky Ledger Atlas</h1>
+          <p className="panel-title">UFO Sightings Intelligence</p>
+          <h1 className="font-display text-5xl leading-[0.9] text-slate-50 sm:text-6xl lg:text-7xl">Sky Ledger</h1>
           <p className="mx-auto max-w-3xl text-sm leading-relaxed text-slate-300 sm:text-base">
             Search and compare decades of sighting reports. Pivot by shape, place, and date,
             then sample random events to spot recurring patterns.
