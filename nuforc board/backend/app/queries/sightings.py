@@ -21,7 +21,7 @@ from ..models import (
     utc_now_iso,
 )
 from ..scoring import quality_label_for_case, top_signal_percentages
-from ..db import fetch_bookmark_set, fetch_evidence_count_map, fetch_score_map
+from ..db import fetch_bookmark_set, fetch_context_map, fetch_evidence_count_map, fetch_score_map
 from .cases import build_case_fingerprint, cache_entry_matches_case
 
 
@@ -166,6 +166,7 @@ def fetch_sightings(
     evidence_count_map = fetch_evidence_count_map(db_path, sighting_ids)
     score_map = fetch_score_map(db_path, sighting_ids)
     bookmark_set = fetch_bookmark_set(db_path, sighting_ids)
+    context_map = fetch_context_map(db_path, sighting_ids)
 
     sightings: list[dict[str, object]] = []
     for row in rows:
@@ -232,6 +233,7 @@ def fetch_sightings(
                 "signals": [key for key, active in signals.items() if active],
                 "story_score": score_map.get(int(row["sighting_id"]), {}).get("story_score", 0),
                 "is_bookmarked": int(row["sighting_id"]) in bookmark_set,
+                "context": context_map.get(int(row["sighting_id"])),
             }
         )
 

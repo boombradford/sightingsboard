@@ -16,6 +16,8 @@ export const DEFAULT_DASHBOARD_STATE = {
     from_date: "",
     to_date: "",
     has_description: false,
+    near_base: false,
+    clear_sky: false,
   },
   pin: [],
   groupBy: "none",
@@ -56,6 +58,8 @@ export function parseDashboardSearch(search) {
       from_date: params.get("pivot_from") || "",
       to_date: params.get("pivot_to") || "",
       has_description: params.get("has_desc") === "1",
+      near_base: params.get("near_base") === "1",
+      clear_sky: params.get("clear_sky") === "1",
     },
     pin: params
       .getAll("pin")
@@ -110,6 +114,8 @@ export function buildDashboardSearch(state) {
   if (state.pivot.from_date) params.set("pivot_from", state.pivot.from_date);
   if (state.pivot.to_date) params.set("pivot_to", state.pivot.to_date);
   if (state.pivot.has_description) params.set("has_desc", "1");
+  if (state.pivot.near_base) params.set("near_base", "1");
+  if (state.pivot.clear_sky) params.set("clear_sky", "1");
 
   for (const lane of state.pin || []) {
     if (lane === "shape" || lane === "place" || lane === "date") {
@@ -150,6 +156,8 @@ export function toSightingQuery(state, pageSize = 80) {
   if (state.pivot.from_date) params.set("from_date", state.pivot.from_date);
   if (state.pivot.to_date) params.set("to_date", state.pivot.to_date);
   if (state.pivot.has_description) params.set("has_description", "1");
+  if (state.pivot.near_base) params.set("near_base", "1");
+  if (state.pivot.clear_sky) params.set("clear_sky", "1");
   if (state.keyword) params.set("keyword", state.keyword);
   params.set("order", state.order || "recent");
   params.set("limit", String(pageSize));
@@ -165,6 +173,8 @@ export function toPivotQuery(state) {
   if (state.pivot.from_date) params.set("from_date", state.pivot.from_date);
   if (state.pivot.to_date) params.set("to_date", state.pivot.to_date);
   if (state.pivot.has_description) params.set("has_description", "1");
+  if (state.pivot.near_base) params.set("near_base", "1");
+  if (state.pivot.clear_sky) params.set("clear_sky", "1");
   for (const lane of state.pin || []) {
     params.append("pinned", lane);
   }

@@ -147,6 +147,24 @@ def ensure_vnext_schema(db_path: Path) -> None:
             "CREATE INDEX IF NOT EXISTS idx_ai_brief_versions_sighting_id_version ON ai_brief_versions(sighting_id, version_num)"
         )
         cur.execute("CREATE INDEX IF NOT EXISTS idx_ai_brief_issues_brief_id ON ai_brief_issues(brief_id)")
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS sighting_context (
+                sighting_id INTEGER PRIMARY KEY,
+                cloud_cover_pct REAL,
+                visibility_m REAL,
+                wind_speed_ms REAL,
+                temperature_c REAL,
+                nearest_base_name TEXT,
+                nearest_base_km REAL,
+                fireball_match_date TEXT,
+                fireball_distance_km REAL,
+                fireball_energy REAL,
+                kp_index REAL,
+                context_updated_at TEXT
+            )
+            """
+        )
         conn.commit()
 
 
@@ -197,6 +215,36 @@ def fetch_evidence_sighting_ids(db_path: Path) -> set[int]:
     with sqlite3.connect(str(db_path)) as conn:
         rows = conn.execute("SELECT DISTINCT sighting_id FROM evidence_links").fetchall()
     return {int(row[0]) for row in rows}
+
+
+def fetch_context_map(db_path: Path, sighting_ids: list[int]) -> dict[int, dict[str, object]]:
+    unique_ids = sorted({int(sid) for sid in sighting_ids if sid is not None})
+    if not unique_ids:
+        return {}
+    placeholders = ",".join("?" for _ in unique_ids)
+    sql = (
+        "SELECT sighting_id, cloud_cover_pct, visibility_m, wind_speed_ms, temperature_c, "
+        "nearest_base_name, nearest_base_km, fireball_match_date, fireball_distance_km, "
+        "fireball_energy, kp_index, context_updated_at "
+        f"FROM sighting_context WHERE sighting_id IN ({placeholders})"
+    )
+    with sqlite3.connect(str(db_path)) as conn:
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute(sql, unique_ids).fetchall()
+    return {int(row["sighting_id"]): dict(row) for row in rows}
+
+
+def fetch_context_row(db_path: Path, sighting_id: int) -> dict[str, object] | None:
+    sql = (
+        "SELECT sighting_id, cloud_cover_pct, visibility_m, wind_speed_ms, temperature_c, "
+        "nearest_base_name, nearest_base_km, fireball_match_date, fireball_distance_km, "
+        "fireball_energy, kp_index, context_updated_at "
+        "FROM sighting_context WHERE sighting_id = ?"
+    )
+    with sqlite3.connect(str(db_path)) as conn:
+        conn.row_factory = sqlite3.Row
+        row = conn.execute(sql, (sighting_id,)).fetchone()
+    return dict(row) if row else None
 
 
 def load_enrichment_index(path: Path) -> dict[int, list[dict[str, object]]]:

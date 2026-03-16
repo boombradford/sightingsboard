@@ -378,6 +378,47 @@ export default function PivotFilterBar({ state, options, pivot, onPivotChange, o
         </FilterPopover>
       </div>
 
+      {/* Near Base toggle */}
+      <m.button
+        type="button"
+        onClick={() => onPivotChange("near_base", !state.pivot.near_base)}
+        className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-caption font-medium transition-colors ${
+          state.pivot.near_base
+            ? "border-amber-500/25 bg-amber-500/[0.06] text-amber-400"
+            : "border-zinc-700 bg-zinc-800/60 text-zinc-200 hover:border-zinc-600 hover:text-zinc-100"
+        }`}
+        {...chipBounce}
+        title="Only show sightings within 30km of a military base"
+      >
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+          <polygon points="7 1 13 5 13 10 7 14 1 10 1 5" stroke="currentColor" strokeWidth="1.2" fill="none" />
+          <circle cx="7" cy="7" r="2" stroke="currentColor" strokeWidth="1" />
+        </svg>
+        <span>Near Base</span>
+      </m.button>
+
+      {/* Clear Sky toggle */}
+      <m.button
+        type="button"
+        onClick={() => onPivotChange("clear_sky", !state.pivot.clear_sky)}
+        className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-caption font-medium transition-colors ${
+          state.pivot.clear_sky
+            ? "border-amber-500/25 bg-amber-500/[0.06] text-amber-400"
+            : "border-zinc-700 bg-zinc-800/60 text-zinc-200 hover:border-zinc-600 hover:text-zinc-100"
+        }`}
+        {...chipBounce}
+        title="Only show sightings with clear sky conditions (≤25% cloud cover)"
+      >
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+          <circle cx="7" cy="7" r="3.5" stroke="currentColor" strokeWidth="1.2" />
+          <line x1="7" y1="1" x2="7" y2="2.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+          <line x1="7" y1="11.5" x2="7" y2="13" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+          <line x1="1" y1="7" x2="2.5" y2="7" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+          <line x1="11.5" y1="7" x2="13" y2="7" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+        </svg>
+        <span>Clear Sky</span>
+      </m.button>
+
       {/* Has description toggle */}
       <m.button
         type="button"

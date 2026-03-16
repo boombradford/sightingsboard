@@ -222,10 +222,17 @@ SIGNAL_KEYS = [
     "telepathy",
     "physical_effects",
     "em_effects",
+    "fireball_match",
 ]
 
 
-def extract_case_signals(shape: str | None, stats_raw: str | None, report_text: str | None) -> dict[str, bool]:
+def extract_case_signals(
+    shape: str | None,
+    stats_raw: str | None,
+    report_text: str | None,
+    *,
+    context: dict[str, object] | None = None,
+) -> dict[str, bool]:
     text = f"{clean_text(report_text) or ''} {clean_text(stats_raw) or ''}".lower()
     shape_norm = (clean_text(shape) or "").lower()
     stats_map = parse_stats_map(stats_raw)
@@ -247,6 +254,7 @@ def extract_case_signals(shape: str | None, stats_raw: str | None, report_text: 
         "telepathy": any(m in text for m in ("telepat", "communicated mentally", "heard in my head", "mental communication")),
         "physical_effects": any(m in text for m in ("burn mark", "skin irritation", "nausea", "headache after", "rash", "hair stood")),
         "em_effects": any(m in text for m in ("car stalled", "engine died", "radio static", "lights flickered", "electronics", "compass")),
+        "fireball_match": bool(context and context.get("fireball_match_date")),
     }
 
 
@@ -259,6 +267,8 @@ def parse_filter_query(query: dict[str, list[str]]) -> dict[str, object]:
     from_date = normalize_date(query.get("from_date", [None])[0])
     to_date, to_date_exclusive = normalize_to_date_upper_bound(query.get("to_date", [None])[0])
     has_description = parse_bool(query.get("has_description", [None])[0], default=False)
+    near_base = parse_bool(query.get("near_base", [None])[0], default=False)
+    clear_sky = parse_bool(query.get("clear_sky", [None])[0], default=False)
     return {
         "keyword": keyword,
         "keyword_query": keyword_query,
@@ -269,6 +279,8 @@ def parse_filter_query(query: dict[str, list[str]]) -> dict[str, object]:
         "to_date": to_date,
         "to_date_exclusive": to_date_exclusive,
         "has_description": has_description,
+        "near_base": near_base,
+        "clear_sky": clear_sky,
     }
 
 
@@ -276,7 +288,7 @@ def parse_filter_payload(payload: dict[str, object] | None) -> dict[str, object]
     if not isinstance(payload, dict):
         return parse_filter_query({})
     pseudo_query: dict[str, list[str]] = {}
-    for key in ("keyword", "state", "shape", "city", "from_date", "to_date"):
+    for key in ("keyword", "state", "shape", "city", "from_date", "to_date", "near_base", "clear_sky"):
         raw = payload.get(key)
         if raw is None:
             continue
@@ -331,6 +343,14 @@ def build_filter_parts(
         params.append(filters["to_date"])
     if filters.get("has_description"):
         where.append(f"{alias}.report_text IS NOT NULL AND LENGTH({alias}.report_text) > 100")
+
+    if filters.get("near_base"):
+        joins.append(f"LEFT JOIN sighting_context ctx ON ctx.sighting_id = {alias}.sighting_id")
+        where.append("ctx.nearest_base_km IS NOT NULL AND ctx.nearest_base_km <= 30")
+    if filters.get("clear_sky"):
+        if not filters.get("near_base"):
+            joins.append(f"LEFT JOIN sighting_context ctx ON ctx.sighting_id = {alias}.sighting_id")
+        where.append("ctx.cloud_cover_pct IS NOT NULL AND ctx.cloud_cover_pct <= 25")
 
     return joins, where, params
 

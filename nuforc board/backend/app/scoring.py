@@ -43,6 +43,7 @@ def compute_story_score(
     row: sqlite3.Row | dict[str, object],
     evidence_count: int = 0,
     enrichment_count: int = 0,
+    context: dict[str, object] | None = None,
 ) -> dict[str, int]:
     """Compute a 0-100 content worthiness score for a sighting."""
     report_text = clean_text(
@@ -62,11 +63,11 @@ def compute_story_score(
     elif text_len < 100:
         description_richness = 5
     elif text_len < 500:
-        description_richness = 15
+        description_richness = 12
     elif text_len < 1500:
-        description_richness = 20
+        description_richness = 17
     else:
-        description_richness = 25
+        description_richness = 20
 
     signals = extract_case_signals(shape, stats_raw, report_text)
     active_count = sum(1 for v in signals.values() if v)
@@ -97,6 +98,20 @@ def compute_story_score(
     shape_norm = (shape or "").lower()
     shape_rarity = 5 if shape_norm and shape_norm not in TOP_3_SHAPES else 0
 
+    context_bonus = 0
+    if context:
+        nearest_base_km = context.get("nearest_base_km")
+        if nearest_base_km is not None and nearest_base_km <= 30:
+            context_bonus += 3
+        cloud_cover = context.get("cloud_cover_pct")
+        if cloud_cover is not None and cloud_cover <= 25:
+            context_bonus += 3
+        if context.get("fireball_match_date"):
+            context_bonus += 2
+        kp = context.get("kp_index")
+        if kp is not None and kp >= 5:
+            context_bonus += 2
+
     story_score = (
         description_richness
         + signal_density
@@ -105,6 +120,7 @@ def compute_story_score(
         + location_specificity
         + media_mention
         + shape_rarity
+        + context_bonus
     )
 
     return {
@@ -116,6 +132,7 @@ def compute_story_score(
         "location_specificity": location_specificity,
         "media_mention": media_mention,
         "shape_rarity": shape_rarity,
+        "context_bonus": context_bonus,
     }
 
 

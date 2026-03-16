@@ -19,6 +19,7 @@ import BriefTabs from "./BriefTabs";
 import BriefVersionTimeline from "./BriefVersionTimeline";
 import EvidencePanel from "./EvidencePanel";
 import CopyForScriptButton from "./CopyForScriptButton";
+import ContextPanel from "./ContextPanel";
 import StoryScoreBreakdown from "./StoryScoreBreakdown";
 
 export default function CasePreviewPane({
@@ -196,6 +197,12 @@ export default function CasePreviewPane({
           storyScore={caseItem.story_score}
           breakdown={caseItem.score_breakdown}
         />
+
+        {caseItem.context && (
+          <CollapsibleSection title="Environmental Context" defaultOpen>
+            <ContextPanel context={caseItem.context} />
+          </CollapsibleSection>
+        )}
 
         <CollapsibleSection title="Evidence" badge={caseItem.evidence_count ?? 0} defaultOpen={!!caseItem.evidence_count}>
           <EvidencePanel caseItem={caseItem} onAddEvidence={onAddEvidence} />

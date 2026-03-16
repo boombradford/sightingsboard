@@ -17,6 +17,7 @@ const SIGNAL_LABELS = {
   telepathy: "Telepathy",
   physical_effects: "Physical Effects",
   em_effects: "EM Effects",
+  fireball_match: "Fireball Match",
 };
 
 function prettySignal(signal) {

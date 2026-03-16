@@ -17,7 +17,7 @@ from ..models import (
     parse_observer_count,
 )
 from ..scoring import compute_story_score, quality_label_for_case
-from ..db import fetch_score_map
+from ..db import fetch_context_row, fetch_score_map
 
 
 def build_case_fingerprint(
@@ -249,9 +249,11 @@ def fetch_case_file(
         serialized["score_breakdown"] = {
             k: score_data.get(k, 0) for k in [
                 "description_richness", "signal_density", "witness_strength",
-                "corroboration", "location_specificity", "media_mention", "shape_rarity",
+                "corroboration", "location_specificity", "media_mention", "shape_rarity", "context_bonus",
             ]
         }
+    context = fetch_context_row(db_path, sighting_id)
+    serialized["context"] = context
     if latest_brief is None:
         serialized["latest_brief"] = None
     else:
