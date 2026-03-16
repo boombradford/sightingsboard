@@ -8,19 +8,19 @@ export default function SaveSampleSetDialog({ onSave, shareId }) {
   const [status, setStatus] = useState("");
 
   return (
-    <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 space-y-2">
+    <div className="rounded-md border border-zinc-800 bg-zinc-900/50 p-3 space-y-2">
       <label className="block">
-        <span className="text-micro text-slate-500">Save as</span>
+        <span className="form-label">Save as</span>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Triangle Midwest 2004-2012"
-          className="mt-1 w-full rounded-lg border border-white/[0.08] bg-surface-elevated px-2.5 py-2 text-caption text-slate-200"
+          className="input-base"
         />
       </label>
       <m.button
         type="button"
-        whileTap={{ scale: 0.96, transition: springs.snappy }}
+        whileTap={{ scale: 0.97, transition: springs.snappy }}
         disabled={!name.trim() || busy}
         onClick={async () => {
           setBusy(true);
@@ -39,8 +39,8 @@ export default function SaveSampleSetDialog({ onSave, shareId }) {
       >
         {busy ? "Saving..." : "Save sample set"}
       </m.button>
-      {status && <p className="text-caption text-slate-300">{status}</p>}
-      {shareId && <p className="text-micro font-mono text-slate-500">Active: {shareId}</p>}
+      {status && <p className="text-caption text-zinc-200">{status}</p>}
+      {shareId && <p className="font-mono text-micro text-zinc-500">Active: {shareId}</p>}
     </div>
   );
 }

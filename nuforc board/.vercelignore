@@ -1,0 +1,16 @@
+__pycache__
+*.pyc
+.env*
+*.db
+*.db-shm
+*.db-wal
+frontend/node_modules
+.playwright-cli
+nuforc_sightings_data
+scripts
+sql
+exports
+output
+data
+web
+public

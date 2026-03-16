@@ -19,16 +19,16 @@ export default function FilterPopover({ open, onClose, title, children, align = 
       {open && (
         <m.div
           ref={ref}
-          className={`absolute top-full z-50 mt-2 w-72 surface-card p-4 ${
+          className={`absolute top-full z-50 mt-2 w-72 rounded-lg border border-zinc-800 bg-zinc-900 p-4 shadow-elevated ${
             align === "right" ? "right-0" : "left-0"
           }`}
-          initial={{ opacity: 0, y: -4, scale: 0.97 }}
+          initial={{ opacity: 0, y: -3, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -4, scale: 0.97 }}
+          exit={{ opacity: 0, y: -3, scale: 0.98 }}
           transition={springs.snappy}
         >
           {title && (
-            <p className="mb-3 text-micro font-medium uppercase tracking-[0.06em] text-slate-500">{title}</p>
+            <p className="mb-3 font-mono text-[9px] font-medium uppercase tracking-[0.1em] text-zinc-400">{title}</p>
           )}
           {children}
         </m.div>

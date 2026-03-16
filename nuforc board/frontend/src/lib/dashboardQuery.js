@@ -2,26 +2,26 @@ const DEFAULT_COLUMNS = [
   "date_time",
   "location",
   "shape",
-  "duration",
-  "observers",
-  "quality",
-  "evidence",
+  "score",
   "signals",
 ];
 
 export const DEFAULT_DASHBOARD_STATE = {
   mode: "explore",
+  keyword: "",
   pivot: {
     shape: "",
     state: "",
     city: "",
     from_date: "",
     to_date: "",
+    has_description: false,
   },
   pin: [],
   groupBy: "none",
   columns: DEFAULT_COLUMNS,
   signal: "",
+  order: "recent",
   sampleSetId: "",
   selectedCaseId: null,
   offset: 0,
@@ -41,17 +41,21 @@ function parseIntSafe(value, fallback = 0) {
 
 export function parseDashboardSearch(search) {
   const params = new URLSearchParams(search || "");
-  const mode = params.get("mode") === "compare" ? "compare" : "explore";
+  const validModes = ["explore", "compare", "pipeline", "discover"];
+  const rawMode = params.get("mode") || "explore";
+  const mode = validModes.includes(rawMode) ? rawMode : "explore";
 
   const state = {
     ...DEFAULT_DASHBOARD_STATE,
     mode,
+    keyword: params.get("keyword") || "",
     pivot: {
       shape: params.get("pivot_shape") || "",
       state: params.get("pivot_state") || "",
       city: params.get("pivot_city") || "",
       from_date: params.get("pivot_from") || "",
       to_date: params.get("pivot_to") || "",
+      has_description: params.get("has_desc") === "1",
     },
     pin: params
       .getAll("pin")
@@ -66,6 +70,7 @@ export function parseDashboardSearch(search) {
           .filter(Boolean)
       : DEFAULT_COLUMNS,
     signal: params.get("signal") || "",
+    order: params.get("order") || "recent",
     sampleSetId: params.get("sample_set") || "",
     selectedCaseId: params.get("case") ? parseIntSafe(params.get("case"), 0) || null : null,
     offset: parseIntSafe(params.get("offset"), 0),
@@ -97,11 +102,14 @@ export function buildDashboardSearch(state) {
     params.set("mode", state.mode);
   }
 
+  if (state.keyword) params.set("keyword", state.keyword);
+
   if (state.pivot.shape) params.set("pivot_shape", state.pivot.shape);
   if (state.pivot.state) params.set("pivot_state", state.pivot.state);
   if (state.pivot.city) params.set("pivot_city", state.pivot.city);
   if (state.pivot.from_date) params.set("pivot_from", state.pivot.from_date);
   if (state.pivot.to_date) params.set("pivot_to", state.pivot.to_date);
+  if (state.pivot.has_description) params.set("has_desc", "1");
 
   for (const lane of state.pin || []) {
     if (lane === "shape" || lane === "place" || lane === "date") {
@@ -119,6 +127,7 @@ export function buildDashboardSearch(state) {
   }
 
   if (state.signal) params.set("signal", state.signal);
+  if (state.order && state.order !== "recent") params.set("order", state.order);
   if (state.sampleSetId) params.set("sample_set", state.sampleSetId);
   if (state.selectedCaseId) params.set("case", String(state.selectedCaseId));
   if (state.offset > 0) params.set("offset", String(state.offset));
@@ -140,7 +149,9 @@ export function toSightingQuery(state, pageSize = 80) {
   if (state.pivot.city) params.set("city", state.pivot.city);
   if (state.pivot.from_date) params.set("from_date", state.pivot.from_date);
   if (state.pivot.to_date) params.set("to_date", state.pivot.to_date);
-  params.set("order", "recent");
+  if (state.pivot.has_description) params.set("has_description", "1");
+  if (state.keyword) params.set("keyword", state.keyword);
+  params.set("order", state.order || "recent");
   params.set("limit", String(pageSize));
   params.set("offset", String(Math.max(0, Number(state.offset) || 0)));
   return params;
@@ -153,6 +164,7 @@ export function toPivotQuery(state) {
   if (state.pivot.city) params.set("city", state.pivot.city);
   if (state.pivot.from_date) params.set("from_date", state.pivot.from_date);
   if (state.pivot.to_date) params.set("to_date", state.pivot.to_date);
+  if (state.pivot.has_description) params.set("has_description", "1");
   for (const lane of state.pin || []) {
     params.append("pinned", lane);
   }

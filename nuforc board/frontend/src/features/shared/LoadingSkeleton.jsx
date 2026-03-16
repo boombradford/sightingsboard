@@ -6,7 +6,7 @@ export default function LoadingSkeleton({ rows = 5, columns = 4, className = "" 
           {Array.from({ length: columns }, (_, c) => (
             <div
               key={c}
-              className="h-8 flex-1 rounded-lg bg-white/[0.03] shimmer"
+              className="h-8 flex-1 rounded-md bg-zinc-800/60 shimmer-scan"
               style={{ animationDelay: `${(r * columns + c) * 0.06}s` }}
             />
           ))}
@@ -17,15 +17,15 @@ export default function LoadingSkeleton({ rows = 5, columns = 4, className = "" 
 }
 
 export function SkeletonLine({ width = "w-full", height = "h-4" }) {
-  return <div className={`${width} ${height} rounded-md bg-white/[0.03] shimmer`} />;
+  return <div className={`${width} ${height} rounded bg-zinc-800/60 shimmer-scan`} />;
 }
 
 export function SkeletonCard() {
   return (
-    <div className="surface-card p-4 space-y-3">
-      <div className="h-4 w-2/3 rounded-md bg-white/[0.04] shimmer" />
-      <div className="h-3 w-full rounded-md bg-white/[0.03] shimmer" style={{ animationDelay: "0.1s" }} />
-      <div className="h-3 w-4/5 rounded-md bg-white/[0.03] shimmer" style={{ animationDelay: "0.2s" }} />
+    <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-4 space-y-3">
+      <div className="h-4 w-2/3 rounded bg-zinc-800 shimmer-scan" />
+      <div className="h-3 w-full rounded bg-zinc-800/60 shimmer-scan" style={{ animationDelay: "0.1s" }} />
+      <div className="h-3 w-4/5 rounded bg-zinc-800/60 shimmer-scan" style={{ animationDelay: "0.2s" }} />
     </div>
   );
 }

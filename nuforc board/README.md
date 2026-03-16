@@ -100,6 +100,17 @@ python3 scripts/pull_intriguing_reports.py \
 `pull_intriguing_reports.py` follows the same page traversal approach as the
 `timothyrenner/nuforc_sightings_data` spider, then scores and exports the most detailed narratives.
 
+Refresh recent sightings for specific states and upsert them into SQLite:
+
+```bash
+python3 scripts/refresh_states.py \
+  --states MO IL IA TN \
+  --from-date 2015-01-01 \
+  --target-per-state 20 \
+  --db ufo_sightings.db \
+  --verbose
+```
+
 Ad-hoc SQL:
 
 ```bash

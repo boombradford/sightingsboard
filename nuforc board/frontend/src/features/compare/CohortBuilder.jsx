@@ -4,8 +4,6 @@ const DIMENSIONS = [
   { key: "date-range", label: "Date Range" },
 ];
 
-const inputCls = "w-full rounded-lg border border-white/[0.08] bg-surface-elevated px-2.5 py-2 text-caption text-slate-200";
-
 export default function CohortBuilder({ compare, options, onChange }) {
   const valueOptions =
     compare.dimension === "place"
@@ -15,49 +13,59 @@ export default function CohortBuilder({ compare, options, onChange }) {
         : [];
 
   return (
-    <section className="surface-card grid gap-3 p-4 md:grid-cols-3">
-      <label className="block">
-        <span className="text-micro text-slate-500">Dimension</span>
-        <select
-          value={compare.dimension}
-          onChange={(e) => onChange({ dimension: e.target.value, cohortA: "", cohortB: "" })}
-          className={inputCls}
-        >
-          {DIMENSIONS.map((d) => (
-            <option key={d.key} value={d.key}>{d.label}</option>
-          ))}
-        </select>
-      </label>
+    <section className="overflow-hidden rounded-lg border border-zinc-800">
+      <div className="flex items-center gap-2 border-b border-zinc-800 bg-zinc-900 px-4 py-3">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-zinc-500">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+        </svg>
+        <h3 className="font-display text-caption font-semibold text-zinc-200">Define Cohorts</h3>
+      </div>
 
-      {compare.dimension === "date-range" ? (
-        <>
-          <label className="block">
-            <span className="text-micro text-slate-500">Cohort A from</span>
-            <input type="date" value={compare.cohortA} onChange={(e) => onChange({ cohortA: e.target.value })} className={inputCls} />
-          </label>
-          <label className="block">
-            <span className="text-micro text-slate-500">Cohort B to</span>
-            <input type="date" value={compare.cohortB} onChange={(e) => onChange({ cohortB: e.target.value })} className={inputCls} />
-          </label>
-        </>
-      ) : (
-        <>
-          <label className="block">
-            <span className="text-micro text-slate-500">Cohort A</span>
-            <select value={compare.cohortA} onChange={(e) => onChange({ cohortA: e.target.value })} className={inputCls}>
-              <option value="">Select A...</option>
-              {valueOptions.map((v) => <option key={v} value={v}>{v}</option>)}
-            </select>
-          </label>
-          <label className="block">
-            <span className="text-micro text-slate-500">Cohort B</span>
-            <select value={compare.cohortB} onChange={(e) => onChange({ cohortB: e.target.value })} className={inputCls}>
-              <option value="">Select B...</option>
-              {valueOptions.map((v) => <option key={v} value={v}>{v}</option>)}
-            </select>
-          </label>
-        </>
-      )}
+      <div className="grid gap-3 bg-zinc-950/50 p-4 md:grid-cols-3">
+        <label className="block">
+          <span className="form-label">Dimension</span>
+          <select
+            value={compare.dimension}
+            onChange={(e) => onChange({ dimension: e.target.value, cohortA: "", cohortB: "" })}
+            className="input-base select-styled"
+          >
+            {DIMENSIONS.map((d) => (
+              <option key={d.key} value={d.key}>{d.label}</option>
+            ))}
+          </select>
+        </label>
+
+        {compare.dimension === "date-range" ? (
+          <>
+            <label className="block">
+              <span className="form-label">Cohort A from</span>
+              <input type="date" value={compare.cohortA} onChange={(e) => onChange({ cohortA: e.target.value })} className="input-base" />
+            </label>
+            <label className="block">
+              <span className="form-label">Cohort B to</span>
+              <input type="date" value={compare.cohortB} onChange={(e) => onChange({ cohortB: e.target.value })} className="input-base" />
+            </label>
+          </>
+        ) : (
+          <>
+            <label className="block">
+              <span className="form-label">Cohort A</span>
+              <select value={compare.cohortA} onChange={(e) => onChange({ cohortA: e.target.value })} className="input-base select-styled">
+                <option value="">Select A...</option>
+                {valueOptions.map((v) => <option key={v} value={v}>{v}</option>)}
+              </select>
+            </label>
+            <label className="block">
+              <span className="form-label">Cohort B</span>
+              <select value={compare.cohortB} onChange={(e) => onChange({ cohortB: e.target.value })} className="input-base select-styled">
+                <option value="">Select B...</option>
+                {valueOptions.map((v) => <option key={v} value={v}>{v}</option>)}
+              </select>
+            </label>
+          </>
+        )}
+      </div>
     </section>
   );
 }

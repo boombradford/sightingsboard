@@ -24,15 +24,15 @@ export default function Modal({ open, onClose, title, children, width = "max-w-l
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
+          transition={{ duration: 0.12 }}
         >
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+          <div className="absolute inset-0 bg-black/70" onClick={onClose} />
           <m.div
             ref={panelRef}
-            className={`relative ${width} w-full surface-card p-6`}
-            initial={{ opacity: 0, scale: 0.95, y: 8 }}
+            className={`relative ${width} w-full rounded-lg border border-zinc-800 bg-zinc-900 p-6 shadow-elevated`}
+            initial={{ opacity: 0, scale: 0.96, y: 6 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.97, y: 4 }}
+            exit={{ opacity: 0, scale: 0.98, y: 3 }}
             transition={springs.snappy}
             role="dialog"
             aria-modal="true"
@@ -40,13 +40,16 @@ export default function Modal({ open, onClose, title, children, width = "max-w-l
           >
             {title && (
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-heading font-semibold text-slate-100">{title}</h2>
+                <h2 className="font-display text-heading font-semibold text-zinc-100">{title}</h2>
                 <button
                   onClick={onClose}
-                  className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition hover:bg-white/[0.06] hover:text-slate-200"
+                  className="flex h-7 w-7 items-center justify-center rounded-md text-zinc-400 transition hover:bg-zinc-800 hover:text-zinc-200"
                   aria-label="Close"
                 >
-                  &#x2715;
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
                 </button>
               </div>
             )}

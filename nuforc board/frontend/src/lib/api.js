@@ -43,3 +43,7 @@ export function postJSON(url, body) {
 export function patchJSON(url, body) {
   return sendJSON(url, "PATCH", body);
 }
+
+export function deleteJSON(url) {
+  return fetchJSON(url, { method: "DELETE" });
+}

@@ -24,10 +24,10 @@ export default function Tooltip({ content, children, side = "top", className = "
       <AnimatePresence>
         {show && content && (
           <m.div
-            className={`absolute z-50 ${positions[side]} pointer-events-none whitespace-nowrap rounded-lg border border-white/[0.08] bg-surface-elevated px-2.5 py-1.5 text-micro text-slate-200 shadow-lg`}
-            initial={{ opacity: 0, scale: 0.92 }}
+            className={`absolute z-50 ${positions[side]} pointer-events-none whitespace-nowrap rounded-md border border-zinc-700 bg-zinc-800 px-2.5 py-1.5 text-micro text-zinc-200 shadow-lg`}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
+            exit={{ opacity: 0, scale: 0.97 }}
             transition={springs.snappy}
             role="tooltip"
           >

@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fetchJSON } from "../lib/api";
-import { buildCaseFromItems, toSightingQuery } from "../lib/dashboardQuery";
+import { toSightingQuery } from "../lib/dashboardQuery";
 import { describeError } from "../lib/format";
 
 function topSignalsFromItems(items) {
@@ -39,7 +39,7 @@ function groupItems(items, groupBy) {
   return [...map.entries()].map(([key, values]) => ({ key, items: values }));
 }
 
-export function useSightings(state, selectCase) {
+export function useSightings(state) {
   const [items, setItems] = useState([]);
   const [meta, setMeta] = useState({ total: 0, returned: 0, slice_signals: [], updated_at: null });
   const [loadingMain, setLoadingMain] = useState(false);
@@ -107,15 +107,14 @@ export function useSightings(state, selectCase) {
 
     loadMain();
     return () => { cancelled = true; };
-  }, [state.mode, state.pivot, state.offset, state.signal, state.sampleSetId, state.compare]);
+  }, [state.mode, state.pivot, state.offset, state.signal, state.order, state.keyword, state.sampleSetId, state.compare]);
 
-  // Auto-select first case when items change
-  useEffect(() => {
-    const nextCaseId = buildCaseFromItems(items, state.selectedCaseId);
-    if (nextCaseId !== state.selectedCaseId) selectCase(nextCaseId);
-  }, [items, state.selectedCaseId, selectCase]);
+
+  const patchItem = useCallback((sightingId, patch) => {
+    setItems((cur) => cur.map((item) => item.sighting_id === sightingId ? { ...item, ...patch } : item));
+  }, []);
 
   const groupedItems = useMemo(() => groupItems(items, state.groupBy), [items, state.groupBy]);
 
-  return { items, meta, groupedItems, loadingMain, error };
+  return { items, meta, groupedItems, loadingMain, error, patchItem };
 }

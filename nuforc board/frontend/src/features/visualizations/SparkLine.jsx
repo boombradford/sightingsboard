@@ -1,6 +1,6 @@
 import { m } from "motion/react";
 
-export default function SparkLine({ data = [], width = 40, height = 14, color = "rgba(94, 234, 212, 0.6)" }) {
+export default function SparkLine({ data = [], width = 40, height = 14, color = "rgba(245, 158, 11, 0.6)" }) {
   if (!data.length || data.length < 2) return null;
 
   const max = Math.max(...data, 1);
@@ -27,7 +27,7 @@ export default function SparkLine({ data = [], width = 40, height = 14, color = 
         strokeLinejoin="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
       />
     </svg>
   );

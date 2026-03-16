@@ -61,7 +61,8 @@ export function usePivotState() {
   }, []);
 
   const updateMode = useCallback((mode) => {
-    setState((cur) => ({ ...cur, mode: mode === "compare" ? "compare" : "explore", offset: 0 }));
+    const valid = ["explore", "compare", "pipeline", "discover"];
+    setState((cur) => ({ ...cur, mode: valid.includes(mode) ? mode : "explore", offset: 0 }));
   }, []);
 
   const togglePin = useCallback((lane) => {
@@ -86,6 +87,10 @@ export function usePivotState() {
       if (!columns.length) columns = [...DASHBOARD_COLUMNS];
       return { ...cur, columns };
     });
+  }, []);
+
+  const setKeyword = useCallback((keyword) => {
+    setState((cur) => ({ ...cur, keyword, offset: 0 }));
   }, []);
 
   const setSignalFilter = useCallback((signal) => {
@@ -121,6 +126,7 @@ export function usePivotState() {
     updateSlice,
     setGroupBy,
     toggleColumn,
+    setKeyword,
     setSignalFilter,
     selectCase,
     prevPage,

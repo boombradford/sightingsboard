@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { LazyMotion, MotionConfig, domAnimation } from "motion/react";
 import { MotionProvider, useMotionConfig } from "../../contexts/MotionContext";
+import { modeStyleVars } from "../../lib/modeTheme";
 import Sidebar from "./Sidebar";
 
 function AppShellInner({ sidebar, children }) {
@@ -9,15 +9,12 @@ function AppShellInner({ sidebar, children }) {
 
   return (
     <MotionConfig reducedMotion="user" transition={transition}>
-      <div className="vitrine-shard vitrine-shard-a" />
-      <div className="vitrine-shard vitrine-shard-b" />
-
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen" style={modeStyleVars(sidebar.mode)}>
         <Sidebar {...sidebar} />
 
         <div
           className={`flex min-h-screen w-full flex-col transition-[margin] duration-200 ${
-            sidebarCollapsed ? "md:ml-16" : "md:ml-[240px]"
+            sidebarCollapsed ? "md:ml-16" : "md:ml-[220px]"
           }`}
         >
           {children}

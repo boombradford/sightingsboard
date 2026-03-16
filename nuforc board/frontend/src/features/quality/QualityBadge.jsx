@@ -2,9 +2,9 @@ import { m } from "motion/react";
 import { springs } from "../../lib/motion";
 
 const VARIANTS = {
-  low: "border-rose-500/20 bg-rose-500/10 text-rose-400",
-  medium: "border-amber-500/20 bg-amber-500/10 text-amber-400",
-  high: "border-emerald-500/20 bg-emerald-500/10 text-emerald-400",
+  low: "border-red-500/20 bg-red-500/10 text-red-400",
+  medium: "border-yellow-500/20 bg-yellow-500/10 text-yellow-400",
+  high: "border-green-500/20 bg-green-500/10 text-green-400",
 };
 
 export default function QualityBadge({ label, score }) {
@@ -18,7 +18,7 @@ export default function QualityBadge({ label, score }) {
       initial={{ opacity: 0, scale: 0 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={springs.bouncy}
-      className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-micro font-medium ${style}`}
+      className={`inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-micro font-medium ${style}`}
     >
       <span className="capitalize">{key}</span>
       <span className="font-mono text-[9px] opacity-70">{score ?? 0}/6</span>

@@ -6,14 +6,12 @@ export default function Chip({ selected, onClick, children, className = "" }) {
     <m.button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-caption font-medium transition-colors ${
+      className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-caption font-medium transition-colors ${
         selected
-          ? "border-accent/30 bg-accent-muted text-accent"
-          : "border-white/[0.06] bg-white/[0.03] text-slate-400 hover:border-white/[0.10] hover:text-slate-200"
+          ? "border-amber-500/25 bg-amber-500/[0.08] text-amber-400"
+          : "border-zinc-700 bg-zinc-800/60 text-zinc-300 hover:border-zinc-600 hover:text-zinc-200"
       } ${className}`}
-      whileTap={{ scale: 0.95, transition: springs.snappy }}
-      animate={selected ? { scale: [1, 1.05, 1] } : { scale: 1 }}
-      transition={springs.bouncy}
+      whileTap={{ scale: 0.96, transition: springs.snappy }}
     >
       {children}
     </m.button>

@@ -24,25 +24,28 @@ export default function Drawer({ open, onClose, title, children, side = "right",
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
+          transition={{ duration: 0.12 }}
         >
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+          <div className="absolute inset-0 bg-black/60" onClick={onClose} />
           <m.div
-            className={`relative ml-auto ${width} h-full border-l border-white/[0.06] bg-surface-deepest/95 backdrop-blur-xl ${isRight ? "ml-auto" : "mr-auto"}`}
+            className={`relative ${width} h-full border-l border-zinc-800 bg-zinc-950 ${isRight ? "ml-auto" : "mr-auto"}`}
             initial={{ x: isRight ? "100%" : "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: isRight ? "100%" : "-100%" }}
             transition={springs.sheet}
           >
             <div className="flex h-full flex-col">
-              <div className="flex items-center justify-between border-b border-white/[0.06] px-5 py-4">
-                {title && <h2 className="text-body font-semibold text-slate-100">{title}</h2>}
+              <div className="flex items-center justify-between border-b border-zinc-800 px-5 py-4">
+                {title && <h2 className="font-display text-body font-semibold text-zinc-100">{title}</h2>}
                 <button
                   onClick={onClose}
-                  className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition hover:bg-white/[0.06] hover:text-slate-200"
+                  className="flex h-7 w-7 items-center justify-center rounded-md text-zinc-400 transition hover:bg-zinc-800 hover:text-zinc-200"
                   aria-label="Close"
                 >
-                  &#x2715;
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto p-5">
